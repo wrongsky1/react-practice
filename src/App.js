@@ -1,6 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
+import PostForm from './components/PostForm';
 import PostItem from './components/PostItem';
 import PostList from './components/PostList';
+import MyButton from './components/UI/button/MyButton'
+import MyInput from './components/UI/input/MyInput';
 import './styles/App.css';
 
 function App() {
@@ -10,13 +13,15 @@ function App() {
     {id:3, title: 'JavaScript3', body: 'Description3'},
   ])
 
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost])
+  }
+
+
+
   return (
     <div className="App">
-      <form>
-        <input type="text" placeholder="Название поста"/>
-        <input type="text" placeholder="Описание поста"/>
-        <button>Создать пост</button>
-      </form>
+      <PostForm create={createPost}/>
       <PostList posts={posts} title={'Посты про JS'}/>
     </div>
   );
