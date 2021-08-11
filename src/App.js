@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, {useState, useRef, useMemo, useEffect} from 'react';
 import PostFilter from './components/PostFilter';
 import PostForm from './components/PostForm';
 import PostItem from './components/PostItem';
@@ -7,29 +7,27 @@ import MyButton from './components/UI/button/MyButton'
 import MyInput from './components/UI/input/MyInput';
 import MyModal from './components/UI/modal/MyModal';
 import MySelect from './components/UI/select/MySelect';
+import axios from 'axios';
+import { usePosts } from './hooks/usePosts';
 import './styles/App.css';
 
 function App() {
-  const [posts, setPosts] = useState([
-    {id:1, title: 'Купить продукты', body: 'лук, морковь, помидоры'},
-    {id:2, title: 'Покормить котов', body: 'Барни, Умка, Тыква, Булка'},
-    {id:3, title: 'Покрасить стены', body: 'Серый и белый'},
-  ])
 
+  const [posts, setPosts] = useState([])
   const [filter, setFilter] = useState({sort: '', query: ''})
   const [modal, setModal] = useState(false)
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  const sortedPosts = useMemo(() => {
-    console.log('отработал алгоритм сортировки')
-    if(filter.sort) {
-      return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
-    }
-    return posts
-  }, [filter.sort, posts])
 
-  const sortedAndSearchedPosts = useMemo(() => {
-      return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
-  }, [filter.query, sortedPosts])
+  useEffect(() => {
+    fetchPosts()
+  }, [])
+
+  async function fetchPosts() {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+    setPosts(response.data)
+  }
+
 
 
 
@@ -47,6 +45,9 @@ function App() {
 
   return (
     <div className="App">
+
+      
+
       <MyButton style={{marginTop: 30}} onClick={() => setModal(true)}>
         Создать пост
       </MyButton>
