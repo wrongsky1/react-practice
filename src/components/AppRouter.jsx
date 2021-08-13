@@ -1,13 +1,16 @@
-import React from 'react'
-import { Redirect, Route, Router, Switch} from 'react-router-dom'
-import About from '../pages/About';
-import Posts from '../pages/Posts';
-import Error from '../pages/Error';
-import PostIdPage from '../pages/PostIdPage';
+import React, { useContext } from 'react'
+import { Redirect, Route, Switch} from 'react-router-dom'
 import { privateRoutes, publicRoutes } from '../router';
+import { AuthContext } from '../context';
+import Loader from './UI/Loader/Loader';
 
 function AppRouter() {
-    const isAuth = true;
+    const {isAuth, setIsAuth, isLoading} = useContext(AuthContext)
+
+    if(isLoading) {
+        return <Loader/>
+    }
+
     return (
         isAuth
             ?
@@ -16,7 +19,8 @@ function AppRouter() {
                     <Route 
                         component={route.component} 
                         path={route.path} 
-                        exact={route.exact}/>
+                        exact={route.exact}
+                        key={route.path}/>
                 )}
 
                 <Redirect to="/posts"/>
@@ -27,10 +31,11 @@ function AppRouter() {
                     <Route 
                         component={route.component} 
                         path={route.path} 
-                        exact={route.exact}/>
+                        exact={route.exact}
+                        key={route.path}/>
                 )}
 
-                <Redirect to="/posts"/>
+                <Redirect to="/login"/>
             </Switch>
 
 
