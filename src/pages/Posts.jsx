@@ -67,7 +67,7 @@ function Posts() {
       <PostFilter filter={filter} setFilter={setFilter}/>
 
       <MySelect 
-        value={}
+        value={limit}
         onChange={value => setLimit(value)}
         defaultValue="Кол-во эдементов на странице"
         options={[
